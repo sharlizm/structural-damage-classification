@@ -1,0 +1,20 @@
+# Dataset kompetisi disimpan lokal
+data/raw/*.csv
+!data/raw/.gitkeep
+data/*.csv
+*.zip
+
+# Model dan prediksi hasil menjalankan notebook
+models/*.pkl
+models/*.joblib
+submissions/*.csv
+
+# Cache dan environment
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+.DS_Store
+Thumbs.db
