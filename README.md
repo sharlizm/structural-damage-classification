@@ -101,53 +101,10 @@ reports/             Catatan audit dan hasil verifikasi
 
 ## Reproducibility dan batasannya
 
-Split dan seed, nilai hyperparameter, label mapping Grade 1–5 → 0–4,
-kategori berdasarkan kemunculan pada data fit, zero-padding ID menjadi 12 digit,
-dan output kelas 1–5 tetap sama dengan sumber. Prefix/category yang tidak ditemukan
-saat transform menjadi missing, sesuai cara awal menggunakan `pd.Categorical`.
-Versi dependensi dipasang secara spesifik di `requirements.txt` sesuai lingkungan
-pengujian Python 3.13. Perbedaan perangkat dan sistem operasi masih dapat
-menimbulkan perbedaan; lihat catatan pada `reports/verification.md`.
-
 `sample_submission.csv` berisi contoh teks `Grade 1`–`Grade 5`, tetapi kode submission
 asli menghasilkan **integer 1–5**. Repository mempertahankan format numerik aslinya.
-Periksa aturan format Kaggle sebelum upload. Data, model pkl, dan submission CSV tidak
-ikut repo; file tersebut dibuat sendiri ketika notebook dijalankan.
-Jangan jalankan eksperimen berat jika hanya ingin mengecek pembuatan submission.
+Aturan format Kaggle harus diperiksa sebelum upload.
 
 Riwayat skor eksperimen dari notebook sumber tersedia di
 [`reports/experiment_history.csv`](reports/experiment_history.csv). Nilainya
 adalah hasil **historis**, bukan hasil training baru dari repository ini.
-Entri percobaan `random_state=2026` yang ada di ZIP pembanding tidak dibawa
-karena tidak ditemukan di `final_ketiga.ipynb` sebagai sumber utama.
-Validasi submission menggunakan pesan error yang jelas tanpa mengubah prediksi.
-
-Lihat [catatan refactoring](reports/refactoring_notes.md) dan
-[hasil pengujian](reports/verification.md).
-
-## Kesesuaian aturan tugas
-
-- Dataset CSV tidak disertakan pada repository karena aturan ukuran dataset.
-  `.gitignore` memuat `data/*.csv` sekaligus `data/raw/*.csv`. Dataset harus
-  diunduh oleh pengguna dan diletakkan di `data/raw/`.
-- `Pipeline` dan `ColumnTransformer` dipakai pada baseline serta tuning klasik.
-  Pipeline native-category juga dipakai pada CatBoost dan semua eksperimen
-  LightGBM. Model final memakai `FinalFeatureTransformer` dan LightGBM Prefix8.
-- Seluruh function/class di `scripts/*.py` memiliki docstring.
-- Tidak ada Neural Network.
-- Hasil analisis, metrik historis, dan langkah menjalankan repository dijelaskan
-  dalam notebook serta README ini.
-
-## Fungsi tambahan pada scripts
-
-`feature_engineering.py` menyediakan pembentukan `building_id_prefix`, penambahan
-fitur prefix kategorikal, interaksi dua kategori, dan audit kelompok prefix.
-Audit prefix di notebook modeling memanggil helper yang sama, tanpa mengubah
-ukuran kelompok atau sumber kategori. `preprocess.py` juga memuat persiapan
-CatBoost yang dipakai notebook dan validasi input CSV. `train.py` memiliki
-helper baseline scikit-learn; konfigurasi dan penyimpanan LightGBM final tetap
-menggunakan `train_final_lightgbm`, bukan helper eksperimen lain.
-
-Fungsi tambahan tidak memaksa eksperimen berat berjalan. Flag `RUN_*` pada
-`02_modeling.ipynb` tetap mengatur eksperimen, dan hanya `RUN_FINAL_TRAINING`
-yang melatih serta menyimpan model final LightGBM.
